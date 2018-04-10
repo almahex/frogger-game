@@ -1,5 +1,3 @@
-var pauseGame = false;
-
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -46,7 +44,11 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        if (!pauseGame) {
+        if (resetGame) {
+            resetGame = false;
+            pauseGame = false;
+            reset();
+        } else if (!pauseGame) {
             update(dt);
             render();
         }
@@ -142,9 +144,29 @@ var Engine = (function(global) {
         }
 
         renderEntities();
+
+        ctx.font = '30px Arial';
+        ctx.fillStyle = 'yellow';
+        ctx.fillText(`Score: ${player.score}`, 20, 100);
+        ctx.fillStyle = 'red';
+        ctx.fillText(`❤`, 20, 570);
+        ctx.fillStyle = 'black';
+        ctx.fillText(`x ${player.lifes}`, 58, 569);
         ctx.fillStyle = 'white';
         ctx.font = '14px Arial';
         ctx.fillText('press space to pause the game', 280, 570);
+
+        if (player.lifes === 0) {
+            pauseGame = true;
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillRect(50,170,404,230);
+            ctx.font = '30px Arial';
+            ctx.fillStyle = 'yellow';
+            ctx.fillText(`GAME OVER!`, 150, 250);
+            ctx.fillStyle = 'white';
+            ctx.fillText(`Press Enter to Play Again`, 82, 350);
+        }
     }
 
     /* This function is called by the render function and is called on each game
@@ -167,7 +189,8 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        player.lifes = 3;
+        player.score = 0;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -190,13 +213,3 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
-
-document.addEventListener('keypress', function(e) {
-    if (e.key = " ") {
-        if (pauseGame === false) {
-            pauseGame = true;
-        } else {
-            pauseGame = false;
-        }
-    }
-});

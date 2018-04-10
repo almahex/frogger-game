@@ -1,3 +1,6 @@
+var pauseGame = false;
+var resetGame = false;
+
 // Enemies our player must avoid
 var Enemy = function(y) {
     // Variables applied to each of our instances go here,
@@ -38,6 +41,8 @@ var Player = function(image, x, y) {
     this.sprite = image;
     this.x = x;
     this.y = y;
+    this.score = 0;
+    this.lifes = 3;
 };
 
 Player.prototype.update = function() {
@@ -87,12 +92,14 @@ Player.prototype.handleInput = function(keyCode) {
 
 Player.prototype.resetPlayer = function() {
     if (this.y === -32) {
+        this.score += 500;
         this.x = 200;
         this.y = 383;
     }
 };
 
 Player.prototype.collision = function() {
+    this.lifes -= 1;
     this.x = 200;
     this.y = 383;
 };
@@ -120,4 +127,22 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+});
+
+document.addEventListener('keypress', function(e) {
+    switch (e.key) {
+        case " ":
+            if (pauseGame === false) {
+                pauseGame = true;
+            } else {
+                pauseGame = false;
+            }
+          break;
+        case "Enter":
+            resetGame = true;
+            break;
+        default:
+          return;
+    }
+
 });
