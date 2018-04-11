@@ -1,13 +1,14 @@
 # Frogger Arcade Game
 
-This application implements the classic Frogger Arcade Game. The goal of this game is to reach the player into the water without being killed by one of the bugs. Touching one of the will kill the player.
+This application implements the classic Frogger Arcade Game. The goal of this game is to reach the player into the water without being killed by one of the bugs. Touching one of them will kill the player.
 Every time the player gets into the water you are rewared with 500 points.
 If you find a heart you will be given an extra life.
 If you fine a diamond you will be given extra points:
 * 1000 for an orange diamond
 * 25000 for a green diamond
 * 50000 if it's a blue diamond
-The player wins the game when he scores 80000 points.
+The game also has three levels, at each level the speed of the bugs will increase.
+The game is won when the player scores 80000 points.
 
 Good luck!
 
