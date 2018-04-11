@@ -49,6 +49,7 @@ var Engine = (function(global) {
             pauseGame = false;
             countResetPlayer = 0;
             speedLevel = 100;
+            message = "GAME OVER!";
             reset();
         } else if (!pauseGame) {
             update(dt);
@@ -170,7 +171,7 @@ var Engine = (function(global) {
             ctx.fillRect(50,170,404,230);
             ctx.font = '30px Arial';
             ctx.fillStyle = 'yellow';
-            ctx.fillText(`GAME OVER!`, 150, 250);
+            ctx.fillText(`${message}`, 150, 250);
             ctx.fillStyle = 'white';
             ctx.fillText(`Press Enter to Play Again`, 82, 350);
         }

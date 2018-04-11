@@ -1,7 +1,8 @@
 var pauseGame = false;
 var resetGame = false;
 var countResetPlayer = 0;
-var speedLevel = 100;
+var speedLevel = 150;
+var message = "GAME OVER!";
 
 // Enemies our player must avoid
 var Enemy = function(y) {
@@ -14,6 +15,7 @@ var Enemy = function(y) {
     this.x = -500*Math.random();
     this.y = y;
     this.speed = (speedLevel*Math.random()) + 20;
+    console.log(this.speed);
 };
 
 // Update the enemy's position, required method for game
@@ -28,6 +30,10 @@ Enemy.prototype.update = function(dt) {
     } else if (this.x >= 505) {
         this.x = -500*Math.random();
         this.speed = (speedLevel*Math.random()) + 20;
+        while (this.speed > 200) {
+            this.speed -= 100;
+        }
+        console.log(this.speed);
     }
 };
 
@@ -49,6 +55,7 @@ var Player = function(image, x, y) {
 };
 
 Player.prototype.update = function() {
+    upgradeLevel.call(this,this.score);
     if (IsPowerOf(countResetPlayer,3)) {
         heart.x = 315;
         heart.y = 268;
@@ -65,7 +72,6 @@ Player.prototype.update = function() {
         diamondThree.x = 15;
         diamondThree.y = 258;
     }
-    upgradeLevel.call(this,this.score);
 };
 
 Player.prototype.render = function() {
@@ -107,27 +113,18 @@ var doMovement = function(keyCode) {
 }
 
 var upgradeLevel = function(score) { 
-    switch (score) {
-        case 15000:
-            this.level = 1;
-            speedLevel += 2;
-            break;
-        case 30000:
-            this.level = 2;
-            speedLevel += 2;
-            break;
-        case 50000:
-            this.level = 3;
-            speedLevel += 2;
-            break;
-        case 75000:
-            this.level = 4;
-            speedLevel += 2;
-            break;
-        case 100000:
-            this.level = 4;
-            speedLevel += 1;
-            break;
+    if (score >= 20000 && score < 40000) {
+        this.level = 1;
+        speedLevel += 10;
+    } else if (score >= 40000 && score < 60000) {
+        this.level = 2;
+        speedLevel += 30;
+    } else if (score >= 60000 && score < 80000) {
+        this.level = 3;
+        speedLevel += 30;
+    } else if (score >= 80000) {
+        this.lifes = 0;
+        message = "   YOU WON!";
     }
 }
 
