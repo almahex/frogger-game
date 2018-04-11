@@ -15,7 +15,6 @@ var Enemy = function(y) {
     this.x = -500*Math.random();
     this.y = y;
     this.speed = (speedLevel*Math.random()) + 20;
-    console.log(this.speed);
 };
 
 // Update the enemy's position, required method for game
@@ -33,7 +32,6 @@ Enemy.prototype.update = function(dt) {
         while (this.speed > 200) {
             this.speed -= 100;
         }
-        console.log(this.speed);
     }
 };
 
