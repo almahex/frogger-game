@@ -9,7 +9,7 @@ If you fine a diamond you will be given extra points:
 * 50000 if it's a blue diamond
 
 The game has three levels, at each level the speed of the bugs will increase.
-The game is won when the player scores 80000 points.
+The game is won when the player scores 80000 points or more.
 
 Good luck!
 
