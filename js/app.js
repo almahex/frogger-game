@@ -52,6 +52,7 @@ var Player = function(image, x, y) {
     this.level = 0;
 };
 
+// Upgrades the level of the user and places diamonds and hearts
 Player.prototype.update = function() {
     upgradeLevel.call(this,this.score);
     if (IsPowerOf(countResetPlayer,3)) {
@@ -72,11 +73,13 @@ Player.prototype.update = function() {
     }
 };
 
+// Renders the player (same as enemy)
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     this.resetPlayer();
 };
 
+// Identifies the pressed button and moves the player accordingly
 var doMovement = function(keyCode) { 
     switch (keyCode) {
         case 'up':
@@ -110,6 +113,7 @@ var doMovement = function(keyCode) {
     }
 }
 
+// Definies the levels based on the score 
 var upgradeLevel = function(score) { 
     if (score >= 20000 && score < 40000) {
         this.level = 1;
@@ -126,14 +130,18 @@ var upgradeLevel = function(score) {
     }
 }
 
+// Calls the function to move the player
 Player.prototype.handleInput = function(keyCode) {
     doMovement.call(this, keyCode);
 };
 
+// Function used to place diamonds and hearts
 function IsPowerOf(x,y) {
     return (Math.log(x)/Math.log(y)) % 1 === 0;
 }
 
+// If the player gets into the water the player get's back
+// to it's initial position
 Player.prototype.resetPlayer = function() {
     if (this.y === -32) {
         this.score += 500;
@@ -143,6 +151,8 @@ Player.prototype.resetPlayer = function() {
     }
 };
 
+// When the player collisions with a bug a life is removed
+// plus the player goes back to it's inital position
 Player.prototype.collision = function() {
     this.lifes -= 1;
     this.x = 200;
@@ -150,6 +160,7 @@ Player.prototype.collision = function() {
     countResetPlayer += 1;
 };
 
+// Diamond Class
 var Diamond = function(image, x, y, points) {
     this.x = x;
     this.y = y;
@@ -157,6 +168,8 @@ var Diamond = function(image, x, y, points) {
     this.points = points;
 };
 
+// Checks if the player has reached a diamond and gives the
+// points to the player
 Diamond.prototype.update = function() {
     if (this.x === (player.x + 17) && this.y === (player.y + 41)) {
         countResetPlayer += 1;
@@ -166,10 +179,12 @@ Diamond.prototype.update = function() {
     }
 };
 
+// Render function (same as player and enemy)
 Diamond.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Heart Class
 var Heart = function(image, x, y, lifes) {
     this.x = x;
     this.y = y;
@@ -177,6 +192,8 @@ var Heart = function(image, x, y, lifes) {
     this.lifes = lifes;
 };
 
+// Checks if the player has reach a heart and gives a player an
+// extra life
 Heart.prototype.update = function() {
     if (this.x === (player.x + 14) && this.y === (player.y + 51)) {
         this.x = -1000;
@@ -186,6 +203,7 @@ Heart.prototype.update = function() {
     }
 };
 
+// Render function (same as the others)
 Heart.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -220,6 +238,8 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+// Listens for the space button or enter to be press in order to pause
+// or reset the game
 document.addEventListener('keypress', function(e) {
     switch (e.key) {
         case " ":

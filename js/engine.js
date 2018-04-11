@@ -152,6 +152,8 @@ var Engine = (function(global) {
 
         renderEntities();
 
+        // Some parameters have been added to the canvas to provide feedback to
+        // the user: score, level, lifes and insturctions on how to pause the game
         ctx.font = '30px Arial';
         ctx.fillStyle = 'yellow';
         ctx.fillText(`Score: ${player.score}`, 20, 100);
@@ -164,6 +166,8 @@ var Engine = (function(global) {
         ctx.font = '14px Arial';
         ctx.fillText('press space to pause the game', 280, 570);
 
+        // If the user loses or wins the game a screen giving feedback and the
+        // possibility to play again is given
         if (player.lifes === 0) {
             pauseGame = true;
             ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
