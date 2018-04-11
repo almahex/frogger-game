@@ -34,7 +34,7 @@ var Engine = (function(global) {
     function main() {
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
-         * instructions at different speeds we need a constant value that
+         * instructions at different speeds we n eed a constant value that
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
@@ -47,6 +47,7 @@ var Engine = (function(global) {
         if (resetGame) {
             resetGame = false;
             pauseGame = false;
+            countResetPlayer = 0;
             reset();
         } else if (!pauseGame) {
             update(dt);
@@ -95,6 +96,10 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
+        allDiamonds.forEach(function(diamond) {
+            diamond.update();
+        });
+        heart.update();
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
@@ -148,6 +153,7 @@ var Engine = (function(global) {
         ctx.font = '30px Arial';
         ctx.fillStyle = 'yellow';
         ctx.fillText(`Score: ${player.score}`, 20, 100);
+        ctx.fillText(`Lvl: ${player.level}`, 410, 100);
         ctx.fillStyle = 'red';
         ctx.fillText(`❤`, 20, 570);
         ctx.fillStyle = 'black';
@@ -177,10 +183,13 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        allDiamonds.forEach(function(diamond) {
+            diamond.render();
+        });
+        heart.render();
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
     }
 
@@ -191,6 +200,7 @@ var Engine = (function(global) {
     function reset() {
         player.lifes = 3;
         player.score = 0;
+        player.level = 0;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -203,7 +213,11 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/char-pink-girl.png'
+        'images/char-pink-girl.png',
+        'images/gem-orange.png',
+        'images/gem-green.png',
+        'images/gem-blue.png',
+        'images/heart.png'
     ]);
     Resources.onReady(init);
 

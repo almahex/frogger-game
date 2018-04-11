@@ -1,5 +1,7 @@
 var pauseGame = false;
 var resetGame = false;
+var countResetPlayer = 0;
+var speedLevel = 100;
 
 // Enemies our player must avoid
 var Enemy = function(y) {
@@ -11,7 +13,7 @@ var Enemy = function(y) {
     this.sprite = 'images/enemy-bug.png';
     this.x = -500*Math.random();
     this.y = y;
-    this.speed = (300*Math.random()) + 100;
+    this.speed = (speedLevel*Math.random()) + 20;
 };
 
 // Update the enemy's position, required method for game
@@ -25,7 +27,7 @@ Enemy.prototype.update = function(dt) {
         player.collision();
     } else if (this.x >= 505) {
         this.x = -500*Math.random();
-        this.speed = (300*Math.random()) + 100;
+        this.speed = (speedLevel*Math.random()) + 20;
     }
 };
 
@@ -43,9 +45,27 @@ var Player = function(image, x, y) {
     this.y = y;
     this.score = 0;
     this.lifes = 3;
+    this.level = 0;
 };
 
 Player.prototype.update = function() {
+    if (IsPowerOf(countResetPlayer,3)) {
+        heart.x = 315;
+        heart.y = 268;
+    }
+    if (IsPowerOf(countResetPlayer,2) && countResetPlayer > 2) {
+        diamondOne.x = 116;
+        diamondOne.y = 92;
+    }
+    if (IsPowerOf(countResetPlayer,4) && countResetPlayer > 2) {
+        diamondTwo.x = 217;
+        diamondTwo.y = 175;
+    }
+    if (IsPowerOf(countResetPlayer,5) && countResetPlayer > 2) {
+        diamondThree.x = 15;
+        diamondThree.y = 258;
+    }
+    upgradeLevel.call(this,this.score);
 };
 
 Player.prototype.render = function() {
@@ -86,15 +106,51 @@ var doMovement = function(keyCode) {
     }
 }
 
+var upgradeLevel = function(score) { 
+    switch (score) {
+        case 15000:
+            this.level = 1;
+            speedLevel += 2;
+            break;
+        case 30000:
+            this.level = 2;
+            speedLevel += 2;
+            break;
+        case 50000:
+            this.level = 3;
+            speedLevel += 2;
+            break;
+        case 75000:
+            this.level = 4;
+            speedLevel += 2;
+            break;
+        case 100000:
+            this.level = 4;
+            speedLevel += 1;
+            break;
+    }
+}
+
 Player.prototype.handleInput = function(keyCode) {
     doMovement.call(this, keyCode);
 };
+
+function IsPowerOf(x,y) {
+    return (Math.log(x)/Math.log(y)) % 1 === 0;
+}
+
+function isPrime(num) {
+  for(var i = 2; i < num; i++)
+    if(num % i === 0) return false;
+  return num !== 1;
+}
 
 Player.prototype.resetPlayer = function() {
     if (this.y === -32) {
         this.score += 500;
         this.x = 200;
         this.y = 383;
+        countResetPlayer += 1;
     }
 };
 
@@ -102,6 +158,47 @@ Player.prototype.collision = function() {
     this.lifes -= 1;
     this.x = 200;
     this.y = 383;
+    countResetPlayer += 1;
+};
+
+var Diamond = function(image, x, y, points) {
+    this.x = x;
+    this.y = y;
+    this.sprite = image;
+    this.points = points;
+};
+
+Diamond.prototype.update = function() {
+    if (this.x === (player.x + 17) && this.y === (player.y + 41)) {
+        countResetPlayer += 1;
+        this.x = -1000;
+        this.y = -1000;
+        player.score += this.points;
+    }
+};
+
+Diamond.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+var Heart = function(image, x, y, lifes) {
+    this.x = x;
+    this.y = y;
+    this.sprite = image;
+    this.lifes = lifes;
+};
+
+Heart.prototype.update = function() {
+    if (this.x === (player.x + 14) && this.y === (player.y + 51)) {
+        this.x = -1000;
+        this.y = -1000;
+        countResetPlayer += 1;
+        player.lifes += this.lifes;
+    }
+};
+
+Heart.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Now instantiate your objects.
@@ -115,6 +212,11 @@ var enemyFour = new Enemy(60);
 var enemyFive = new Enemy(143);
 var enemySix = new Enemy(226);
 var allEnemies = [enemyOne, enemyTwo, enemyThree, enemyFour, enemyFive, enemySix];
+var diamondOne = new Diamond('images/gem-orange.png', -1000, -1000, 1000);
+var diamondTwo = new Diamond('images/gem-green.png', -1000, -1000, 2500);
+var diamondThree = new Diamond('images/gem-blue.png', -1000, -1000, 5000);
+var allDiamonds = [diamondOne, diamondTwo, diamondThree];
+var heart = new Heart('images/heart.png', -1000, -1000, 1);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
