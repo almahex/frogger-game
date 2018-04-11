@@ -134,12 +134,6 @@ function IsPowerOf(x,y) {
     return (Math.log(x)/Math.log(y)) % 1 === 0;
 }
 
-function isPrime(num) {
-  for(var i = 2; i < num; i++)
-    if(num % i === 0) return false;
-  return num !== 1;
-}
-
 Player.prototype.resetPlayer = function() {
     if (this.y === -32) {
         this.score += 500;
