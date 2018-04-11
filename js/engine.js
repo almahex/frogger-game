@@ -34,7 +34,7 @@ var Engine = (function(global) {
     function main() {
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
-         * instructions at different speeds we n eed a constant value that
+         * instructions at different speeds we need a constant value that
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
@@ -48,6 +48,7 @@ var Engine = (function(global) {
             resetGame = false;
             pauseGame = false;
             countResetPlayer = 0;
+            speedLevel = 100;
             reset();
         } else if (!pauseGame) {
             update(dt);
@@ -201,6 +202,17 @@ var Engine = (function(global) {
         player.lifes = 3;
         player.score = 0;
         player.level = 0;
+        player.x = 200;
+        player.y = 383;
+        allEnemies.forEach(function(enemy) {
+            enemy.x = -500*Math.random();
+        });
+        allDiamonds.forEach(function(diamond) {
+            diamond.x = -1000;
+            diamond.y = -1000;
+        });
+        heart.x = -1000;
+        heart.y = -1000;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
