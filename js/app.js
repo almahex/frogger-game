@@ -24,7 +24,8 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x = this.x + (this.speed * dt);
-    if (this.x < (player.x + 2) && this.x > (player.x - 50) && this.y === (player.y + 9)) {
+    console.log(this.x, player.x);
+    if (this.x < (player.x + 70) && this.x > (player.x - 60) && this.y === (player.y + 9)) {
         player.collision();
     } else if (this.x >= 505) {
         this.x = -500*Math.random();
