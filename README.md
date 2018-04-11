@@ -7,7 +7,8 @@ If you fine a diamond you will be given extra points:
 * 1000 for an orange diamond
 * 25000 for a green diamond
 * 50000 if it's a blue diamond
-The game also has three levels, at each level the speed of the bugs will increase.
+
+The game has three levels, at each level the speed of the bugs will increase.
 The game is won when the player scores 80000 points.
 
 Good luck!
