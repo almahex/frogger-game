@@ -1,6 +1,5 @@
 var pauseGame = false;
 var resetGame = false;
-var countResetPlayer = 0;
 var speedLevel = 150;
 var message = "GAME OVER!";
 
@@ -24,7 +23,10 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x = this.x + (this.speed * dt);
-    console.log(this.x, player.x);
+    this.checkCollisions();
+};
+
+Enemy.prototype.checkCollisions = function() {
     if (this.x < (player.x + 70) && this.x > (player.x - 60) && this.y === (player.y + 9)) {
         player.collision();
     } else if (this.x >= 505) {
@@ -51,24 +53,25 @@ var Player = function(image, x, y) {
     this.score = 0;
     this.lifes = 3;
     this.level = 0;
+    this.countResetPlayer = 0;
 };
 
 // Upgrades the level of the user and places diamonds and hearts
 Player.prototype.update = function() {
-    upgradeLevel.call(this,this.score);
-    if (IsPowerOf(countResetPlayer,3)) {
+    this.upgradeLevel(this.score);
+    if (IsPowerOf(this.countResetPlayer,3)) {
         heart.x = 315;
         heart.y = 268;
     }
-    if (IsPowerOf(countResetPlayer,2) && countResetPlayer > 2) {
+    if (IsPowerOf(this.countResetPlayer,2) && this.countResetPlayer > 2) {
         diamondOne.x = 116;
         diamondOne.y = 92;
     }
-    if (IsPowerOf(countResetPlayer,4) && countResetPlayer > 2) {
+    if (IsPowerOf(this.countResetPlayer,4) && this.countResetPlayer > 2) {
         diamondTwo.x = 217;
         diamondTwo.y = 175;
     }
-    if (IsPowerOf(countResetPlayer,5) && countResetPlayer > 2) {
+    if (IsPowerOf(this.countResetPlayer,5) && this.countResetPlayer > 2) {
         diamondThree.x = 15;
         diamondThree.y = 258;
     }
@@ -81,7 +84,7 @@ Player.prototype.render = function() {
 };
 
 // Identifies the pressed button and moves the player accordingly
-var doMovement = function(keyCode) { 
+Player.prototype.doMovement = function(keyCode) { 
     switch (keyCode) {
         case 'up':
             if (this.y < 51) {
@@ -90,6 +93,7 @@ var doMovement = function(keyCode) {
                 this.y -= 83;
                 break;
             }
+            break;
         case 'down':
             if (this.y > 300) {
                 break;
@@ -97,6 +101,7 @@ var doMovement = function(keyCode) {
                 this.y += 83;
                 break;
             }
+            break;
         case 'right':
             if (this.x > 301) {
                 break;
@@ -104,6 +109,7 @@ var doMovement = function(keyCode) {
                 this.x += 101;
                 break;
             }
+            break;
         case 'left':
             if (this.x < 99) {
                 break;
@@ -111,11 +117,12 @@ var doMovement = function(keyCode) {
                 this.x -= 101;
                 break;
             }
+            break;
     }
-}
+};
 
 // Definies the levels based on the score 
-var upgradeLevel = function(score) { 
+Player.prototype.upgradeLevel = function(score) { 
     if (score >= 20000 && score < 40000) {
         this.level = 1;
         speedLevel += 10;
@@ -129,11 +136,11 @@ var upgradeLevel = function(score) {
         this.lifes = 0;
         message = "   YOU WON!";
     }
-}
+};
 
 // Calls the function to move the player
 Player.prototype.handleInput = function(keyCode) {
-    doMovement.call(this, keyCode);
+    this.doMovement(keyCode);
 };
 
 // Function used to place diamonds and hearts
@@ -148,7 +155,7 @@ Player.prototype.resetPlayer = function() {
         this.score += 500;
         this.x = 200;
         this.y = 383;
-        countResetPlayer += 1;
+        this.countResetPlayer += 1;
     }
 };
 
@@ -158,7 +165,7 @@ Player.prototype.collision = function() {
     this.lifes -= 1;
     this.x = 200;
     this.y = 383;
-    countResetPlayer += 1;
+    this.countResetPlayer += 1;
 };
 
 // Diamond Class
@@ -173,7 +180,7 @@ var Diamond = function(image, x, y, points) {
 // points to the player
 Diamond.prototype.update = function() {
     if (this.x === (player.x + 17) && this.y === (player.y + 41)) {
-        countResetPlayer += 1;
+        player.countResetPlayer += 1;
         this.x = -1000;
         this.y = -1000;
         player.score += this.points;
@@ -199,7 +206,7 @@ Heart.prototype.update = function() {
     if (this.x === (player.x + 14) && this.y === (player.y + 51)) {
         this.x = -1000;
         this.y = -1000;
-        countResetPlayer += 1;
+        player.countResetPlayer += 1;
         player.lifes += this.lifes;
     }
 };

@@ -47,7 +47,7 @@ var Engine = (function(global) {
         if (resetGame) {
             resetGame = false;
             pauseGame = false;
-            countResetPlayer = 0;
+            player.countResetPlayer = 0;
             speedLevel = 100;
             message = "GAME OVER!";
             reset();
